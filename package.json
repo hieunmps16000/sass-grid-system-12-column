@@ -1,0 +1,12 @@
+{
+  "name": "grid-system-12-column",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "sass scss:assets/css -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
