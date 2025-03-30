@@ -1,4 +1,5 @@
 @use "sass:map";
+@use "sass:math";
 
 // Breakpoints, dimension, container, row, column, v.v
 $grid-breakpoints: (
@@ -38,8 +39,14 @@ $grid-gutter-width: 30px;
 .row {
     display: flex;
     flex-wrap: wrap;
+    row-gap: $grid-gutter-width;
     margin-left: -$grid-gutter-width * 0.5;
     margin-right: -$grid-gutter-width * 0.5;
+
+    > [class*="col-"] {
+        flex: 0 0 auto;
+        @extend %gutter-padding;
+    }
 }
 
 .col {
@@ -47,19 +54,30 @@ $grid-gutter-width: 30px;
     @extend %gutter-padding;
 }
 
-@debug map.get($container-max-widths, sm);
-
-@mixin make-media-query($dimension) {
-    @media (min-width: $dimension) {
+@mixin make-media-query($dimension, $bypass: false) {
+    @if $bypass {
         @content;
+    } @else {
+        @media (min-width: $dimension) {
+            @content;
+        }
     }
 }
 
 @each $breakpoint, $dimension in $grid-breakpoints {
     $max-width: map.get($container-max-widths, $breakpoint);
-    @include make-media-query($dimension) {
+    $infix: if($breakpoint == xs, "", "-#{$breakpoint}");
+    @include make-media-query($dimension, $breakpoint == xs) {
         .container {
             max-width: $max-width;
         }
+
+        @for $i from 1 through $grid-columns {
+            .col#{$infix}-#{$i} {
+                width: math.div(100%, $grid-columns) * $i;
+            }
+        }
     }
 }
+
+// xử lý infix
