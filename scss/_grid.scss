@@ -61,7 +61,6 @@ $gutters: (
 
 .col {
     flex: 1 0;
-    @extend %gutter-padding;
 }
 
 @mixin make-media-query($dimension, $bypass: false) {
