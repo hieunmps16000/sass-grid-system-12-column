@@ -53,8 +53,8 @@ $gutters: (
     margin-left: calc(var(--grid-gutter-x) * -0.5);
     margin-right: calc(var(--grid-gutter-x) * -0.5);
 
-    > * {
-        margin-top: var(--grid-gutter-y);
+    > * [class*="col-"] {
+        flex: 0 0 auto;
         @extend %gutter-padding;
     }
 }
@@ -73,46 +73,6 @@ $gutters: (
     }
 }
 
-@mixin make-columns($infix) {
-    @for $i from 1 through $grid-columns {
-        .col#{$infix}-#{$i} {
-            flex: 0 0 auto;
-            width: math.div(100%, $grid-columns) * $i;
-        }
-    }
-}
-
-@mixin make-row-columns($infix) {
-    @for $i from 1 through $grid-columns * 0.5 {
-        .row-cols#{$infix}-#{$i} > * {
-            flex: 0 0 auto;
-            width: math.div(100%, $i);
-        }
-    }
-}
-
-@mixin make-offset($infix) {
-    @for $i from 1 to $grid-columns {
-        .offset#{$infix}-#{$i} {
-            margin-left: math.div(100%, $grid-columns) * $i;
-        }
-    }
-}
-
-@mixin make-gutters($infix) {
-    @each $i, $ratio in $gutters {
-        .g#{$infix}-#{$i},
-        .gx#{$infix}-#{$i} {
-            --grid-gutter-x: #{$grid-gutter-width * $ratio};
-        }
-
-        .g#{$infix}-#{$i},
-        .gy#{$infix}-#{$i} {
-            --grid-gutter-y: #{$grid-gutter-width * $ratio};
-        }
-    }
-}
-
 @each $breakpoint, $dimension in $grid-breakpoints {
     $max-width: map.get($container-max-widths, $breakpoint);
     $is-xs: $breakpoint == xs;
@@ -122,9 +82,10 @@ $gutters: (
             max-width: $max-width;
         }
 
-        @include make-row-columns($infix);
-        @include make-columns($infix);
-        @include make-offset($infix);
-        @include make-gutters($infix);
+        @for $i from 1 through $grid-columns {
+            .col#{$infix}-#{$i} {
+                width: math.div(100%, $grid-columns) * $i;
+            }
+        }
     }
 }
